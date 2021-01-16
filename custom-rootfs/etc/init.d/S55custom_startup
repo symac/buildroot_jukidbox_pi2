@@ -1,0 +1,35 @@
+#!/bin/sh
+#!/bin/sh
+#
+# Start the usb audio driver
+#
+
+case "$1" in
+  start)
+        echo -n "Starting custom service "
+        cd /root/jukidbox
+        while [ ! -e /dev/sda1 ]; do
+          sleep 0.1
+          counter=$((counter + 1))
+          if [ $counter -ge 500 ]; then
+            exit
+          fi
+        done
+
+        mount -a
+        clear
+        nohup python soundControl.py > /dev/null &
+        python jukidbox.py
+        echo "OK"
+        ;;
+  stop)
+        echo -n "Stopping custom services "
+        ;;
+  restart|reload)
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?
